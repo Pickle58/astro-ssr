@@ -2,18 +2,12 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from "astro:content";
+import {formatDate} from '../../utils';
 
-const allBlogArticles: CollectionEntry<'blog'>[] = await getCollection('blog');
+const allBlogArticles: CollectionEntry<'blog'>[] = (await getCollection('blog'))
+  .sort((a:CollectionEntry<'blog'>, b:CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-function formatDate(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
 
-  return new Date(date).toLocaleDateString(undefined, options);
-}
 ---
 <MainLayout>
     <h1 class="text-2xl pb-3">All Articles</h1>
